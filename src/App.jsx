@@ -21,21 +21,22 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="reports" element={<Reports />} />
-        <Route path="reports/sales" element={<SalesReports />} />
-        <Route path="reports/users" element={<UserReports />} />
-        <Route path="users" element={<Users />} />
-        <Route path="products" element={<Products />} />
-        <Route path="api-example" element={<ApiExample />} />
-        <Route path="api-hooks" element={<HookExample />} />
-        <Route path="loading-states" element={<LoadingStates />} />
-        <Route path="hooks-example" element={<HooksExample />} />
-        <Route path="custom-hooks" element={<CustomHooksExample />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="form" element={<Form />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+      <Route index element={<Dashboard />} />
+      <Route path="reports" element={<Reports />} />
+      <Route path="reports/sales" element={<SalesReports />} />
+      <Route path="reports/users" element={<UserReports />} />
+      <Route path="users" element={<Users />} />
+      <Route path="products" element={<Products />} />
+      <Route path="api-example" element={<ApiExample />} />
+      <Route path="api-hooks" element={<HookExample />} />
+      <Route path="loading-states" element={<LoadingStates />} />
+      <Route path="hooks-example" element={<HooksExample />} />
+      <Route path="custom-hooks" element={<CustomHooksExample />} />
+      <Route path="settings" element={<Settings />} />
+      <Route path="form" element={<Form />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
+      <Route path="register" element={<Form />} />
     </Routes>
   )
 }

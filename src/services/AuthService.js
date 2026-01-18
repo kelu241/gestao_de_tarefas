@@ -42,5 +42,30 @@ export const AuthService = {
   // Pegar token atual
   getToken() {
     return localStorage.getItem('authToken');
+  },
+
+register: async (userData, URL) => {
+  const response = await fetch(URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
+
+  // Tenta ler o corpo (pode vir json ou texto)
+  const contentType = response.headers.get('content-type') || '';
+  const body = contentType.includes('application/json')
+    ? await response.json().catch(() => null)
+    : await response.text().catch(() => '');
+
+  if (!response.ok) {
+    // Se o backend manda "message", ótimo; senão usa status
+    const msg =
+      (body && typeof body === 'object' && body.message) ||
+      (typeof body === 'string' && body) ||
+      `Erro HTTP ${response.status}`;
+    throw new Error(msg);
   }
+
+  return body; // pode ser objeto ou string dependendo do backend
+}
 };
