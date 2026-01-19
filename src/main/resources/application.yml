@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: my-app
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=projetos;encrypt=false;trustServerCertificate=true;createDatabaseIfNotExist=true
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: sa
+    password: 'PutaquePariu24'
+    hikari:
+      maximum-pool-size: 10  # Aumentado para melhor performance
+      minimum-idle: 2        # Mantém conexões ativas
+      connection-timeout: 30000  # Timeout maior
+      idle-timeout: 600000   # 10 minutos
+      max-lifetime: 1800000  # 30 minutos
+  jpa:
+    hibernate:
+      ddl-auto: update  # Mantém 'update' para preservar dados existentes
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServerDialect
+        jdbc:
+          time_zone: America/Sao_Paulo
+        connection:
+          provider_disables_autocommit: true
+    open-in-view: false  # Evita lazy loading fora de transação
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+      async:
+        request-timeout: 5000ms
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# Configurações de logging personalizadas
+logging:
+  level:
+    com.luciano.tarefas: INFO
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.security: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: TRACE
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: TRACE
+    org.springframework.http.converter: TRACE
+    org.apache.catalina.core: DEBUG
+    org.apache.coyote.http11: DEBUG
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId:-}] %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{requestId:-}] %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
