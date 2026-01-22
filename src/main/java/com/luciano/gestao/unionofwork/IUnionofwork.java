@@ -1,7 +1,7 @@
 package com.luciano.gestao.unionofwork;
 
-import com.luciano.gestao.repository.IProjetoRepository;
+import com.luciano.gestao.repository.ITarefaRepository;
 
 public interface IUnionofwork {
-    IProjetoRepository GetProjetoRepository();
+    ITarefaRepository GetTarefaRepository();
 }

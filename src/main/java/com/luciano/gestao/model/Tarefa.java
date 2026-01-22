@@ -23,7 +23,7 @@ public class Tarefa {
     @Column(name = "orcamento", precision = 10, scale = 2, nullable = false)
     private BigDecimal orcamento;
     @Column(name = "status", nullable = false)
-    private Boolean status;
+    private String status;
     @Column(name = "data_inicio", nullable = false)
     private Date dataInicio;
     @Column(name = "data_fim", nullable = false)
@@ -50,11 +50,11 @@ public class Tarefa {
         this.orcamento = orcamento;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -87,7 +87,7 @@ public class Tarefa {
 
    
 
-    public Tarefa(Long id, String nome, String descricao, BigDecimal orcamento, BigDecimal duracao, Boolean status, Date dataInicio, Date dataFim) {
+    public Tarefa(Long id, String nome, String descricao, BigDecimal orcamento, BigDecimal duracao, String status, Date dataInicio, Date dataFim) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;

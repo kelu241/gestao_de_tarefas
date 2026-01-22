@@ -10,14 +10,14 @@ import com.luciano.gestao.model.Tarefa;
 
 
 @Repository
-public class ProjetoRepository extends GenericRepository<Tarefa> implements IProjetoRepository {
+public class TarefaRepository extends GenericRepository<Tarefa> implements ITarefaRepository {
 
     @Autowired
-    private ProjetoJpaRepository projetoJpaRepository;
+    private TarefaJpaRepository TarefaJpaRepository;
 
     @Override
     protected JpaRepository<Tarefa, Long> getRepository() {
-        return projetoJpaRepository;
+        return TarefaJpaRepository;
     }
 
 }
