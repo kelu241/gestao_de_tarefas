@@ -1,23 +1,48 @@
 import DataTable from 'react-data-table-component';
 import { useState, useEffect } from 'react';
-import { ProjetoService } from '../services/ProjetoService';
+import { TarefaService } from '../services/TarefaService';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [apiData, setApiData] = useState(null);
-  
+  const [tarefasAtrasadas, setTarefasAtrasadas] = useState(0);
+  const [tarefasConcluidas, setTarefasConcluidas] = useState(0);
+
   // Debug: Log sempre que apiData muda  
   console.log('🔄 Dashboard re-renderizou. apiData:', apiData ? `${apiData.length} itens` : 'null', 'loading:', loading);
 
   // ✅ useEffect simplificado - sempre busca dados frescos
   useEffect(() => {
     console.log('🚀 useEffect executado - buscando dados frescos');
-    
+    let tarefasLoaded = false;
+    let atrasadasLoaded = false;
+
+    const checkLoading = () => {
+      if (tarefasLoaded && atrasadasLoaded) {
+        setLoading(false);
+      }
+    };
+
+
     setLoading(true);
 
     // Criar Observable
-    const testeApi = ProjetoService(
-      'http://localhost:8080/api/projetos',
+    const testeApi = TarefaService(
+      'http://localhost:8080/api/tarefas',
+      'GET',
+      { 'Content-Type': 'application/json' },
+      null
+    );
+
+    const atrasadas = TarefaService(
+      'http://localhost:8080/api/tarefas/atrasadas',
+      'GET',
+      { 'Content-Type': 'application/json' },
+      null
+    );
+
+    const concluidas = TarefaService(
+      'http://localhost:8080/api/tarefas/concluidas',
       'GET',
       { 'Content-Type': 'application/json' },
       null
@@ -30,22 +55,53 @@ const Dashboard = () => {
         console.log('📊 Tipo dos dados:', typeof data);
         console.log('📋 É array?', Array.isArray(data));
         console.log('📏 Quantidade de itens:', data?.length || 'N/A');
-        
+
         // Atualizar com os dados recebidos
         if (data) {
           console.log('✅ Atualizando estado com dados frescos');
           setApiData(data);
+          tarefasLoaded = true;
+          checkLoading();
         } else {
           console.log('⚠️ Dados vazios ou nulos');
           setApiData([]);
         }
-        setLoading(false);
+
       },
       error: (err) => {
         console.error('❌ Erro na API:', err);
         console.error('🔍 Status do erro:', err.message);
         setApiData([]);
-        setLoading(false);
+        checkLoading();
+      }
+    });
+
+
+    const atrasadasSubscription = atrasadas.subscribe({
+      next: (data) => {
+        console.log('🎉 Tarefas atrasadas recebidas:', data);
+        setTarefasAtrasadas(data);
+        atrasadasLoaded = true;
+        checkLoading();
+
+      },
+      error: (err) => {
+        console.error('❌ Erro ao buscar tarefas atrasadas:', err);
+        checkLoading();
+      }
+    });
+
+    const concluidasSubscription = concluidas.subscribe({
+      next: (data) => {
+        console.log('🎉 Tarefas concluídas recebidas:', data);
+        setTarefasConcluidas(data);
+        concluidasLoaded = true;
+        checkLoading();
+
+      },
+      error: (err) => {
+        console.error('❌ Erro ao buscar tarefas concluídas:', err);
+        checkLoading();
       }
     });
 
@@ -53,6 +109,8 @@ const Dashboard = () => {
     return () => {
       console.log('🧹 Cleanup executado - desmontando componente');
       subscription.unsubscribe();
+      atrasadasSubscription.unsubscribe();
+      concluidasSubscription.unsubscribe();
       console.log('Observable desconectado - sem vazamento!');
     };
   }, []); // ← Array vazio = executa só uma vez
@@ -76,6 +134,12 @@ const Dashboard = () => {
     {
       name: 'Orçamento',
       selector: row => row.orcamento,
+      sortable: true,
+      width: '150px',
+    },
+    {
+      name: 'status',
+      selector: row => row.dataInicio,
       sortable: true,
       width: '150px',
     },
@@ -153,28 +217,60 @@ const Dashboard = () => {
   //   }, 500);
   // }, []);
   return (
+
     <>
       {/* Row para as métricas */}
       <div className="row mb-4">
         <div className="col-sm-6 col-lg-3">
-          <div className="card">
-            <div className="card-body">
-              <div className="subheader">Vendas (Hoje)</div>
-              <div className="h1 mb-3">R$ 3.240</div>
-              <div className="d-flex align-items-center">
+          <div className="card h-100">
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <div className="subheader">Atividades em Atraso (Hoje)</div>
+                <div className="h1 mb-3">{tarefasAtrasadas.length}</div>
+              </div>
+              <div className="d-flex align-items-center mt-auto">
                 <div className="text-green me-2">+8%</div>
                 <small className="text-muted">vs ontem</small>
               </div>
             </div>
           </div>
         </div>
-
         <div className="col-sm-6 col-lg-3">
-          <div className="card">
-            <div className="card-body">
-              <div className="subheader">Usuários ativos</div>
-              <div className="h1 mb-3">1.287</div>
-              <div className="d-flex align-items-center">
+          <div className="card h-100">
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <div className="subheader">Tarefas concluídas</div>
+                <div className="h1 mb-3">{tarefasConcluidas.length}</div>
+              </div>
+              <div className="d-flex align-items-center mt-auto">
+                <div className="text-red me-2">-2%</div>
+                <small className="text-muted">vs semana passada</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-sm-6 col-lg-3">
+          <div className="card h-100">
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <div className="subheader">Tarefas em andamento</div>
+                <div className="h1 mb-3">{tarefasConcluidas.length}</div>
+              </div>
+              <div className="d-flex align-items-center mt-auto">
+                <div className="text-red me-2">-2%</div>
+                <small className="text-muted">vs semana passada</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-sm-6 col-lg-3">
+          <div className="card h-100">
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <div className="subheader">Tarefas Canceladas</div>
+                <div className="h1 mb-3">{tarefasConcluidas.length}</div>
+              </div>
+              <div className="d-flex align-items-center mt-auto">
                 <div className="text-red me-2">-2%</div>
                 <small className="text-muted">vs semana passada</small>
               </div>
@@ -183,16 +279,13 @@ const Dashboard = () => {
         </div>
       </div>
 
+
       {/* Row para a tabela */}
       <div className="row">
         <div className="col-12">
           <div className="card">
             <div className="card-header">
               <h3 className="card-title">Últimas atividades</h3>
-              {/* Debug info */}
-              <div className="text-muted small">
-                Debug: {apiData ? `${Array.isArray(apiData) ? apiData.length : 'não é array'} itens` : 'sem dados'}
-              </div>
             </div>
             <DataTable
               columns={colunas}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ApiService } from '../services/ProjetoService';
+import { ApiService } from '../services/TarefaService';
 
 const ExemploComInterceptor = () => {
   const [users, setUsers] = useState([]);

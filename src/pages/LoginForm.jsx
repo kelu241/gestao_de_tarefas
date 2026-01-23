@@ -70,8 +70,8 @@ const LoginForm = () => {
 
       LoginAction(formData, URL);
 
-      alert('Login feito com suecesso');
-      document.location.href = "/";
+      // alert('Login feito com suecesso');
+     
 
       // Limpar formulário
       setFormData(createLogin());

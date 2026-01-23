@@ -81,6 +81,7 @@ httpInterceptor.addResponseInterceptor(async (response) => {
     
     // Limpar token
     localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
     
     // Redirecionar para login (ou disparar evento)
     window.location.href = '/login';

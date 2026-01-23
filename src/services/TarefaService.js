@@ -3,7 +3,7 @@ import { from } from 'rxjs';
 import httpInterceptor from '../utils/httpInterceptor';
 
 // ✅ Service que usa interceptor (como HttpClient do Angular)
-export const ProjetoService = (url, method = 'GET', headers = {}, body = null) => {
+export const TarefaService = (url, method = 'GET', headers = {}, body = null) => {
   
   // Configurar headers padrão
   const defaultHeaders = {
@@ -37,19 +37,19 @@ export const ProjetoService = (url, method = 'GET', headers = {}, body = null) =
 export const ApiService = {
   
   get: (url, headers = {}) => {
-    return ProjetoService(url, 'GET', headers);
+    return TarefaService(url, 'GET', headers);
   },
   
   post: (url, data, headers = {}) => {
-    return ProjetoService(url, 'POST', headers, data);
+    return TarefaService(url, 'POST', headers, data);
   },
   
   put: (url, data, headers = {}) => {
-    return ProjetoService(url, 'PUT', headers, data);
+    return TarefaService(url, 'PUT', headers, data);
   },
   
   delete: (url, headers = {}) => {
-    return ProjetoService(url, 'DELETE', headers);
+    return TarefaService(url, 'DELETE', headers);
   }
 };
 

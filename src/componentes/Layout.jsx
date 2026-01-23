@@ -7,7 +7,7 @@ import { useLocalStorage } from '../hooks/customHooks';
 
 
 const Layout = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(false); // Inicia FECHADO
+    const [sidebarOpen, setSidebarOpen] = useState(true); // Inicia ABERTO
 
     const toggleSidebar = () => {
         console.log('Toggle sidebar clicked! Current state:', sidebarOpen);

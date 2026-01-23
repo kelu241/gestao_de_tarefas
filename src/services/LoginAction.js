@@ -18,6 +18,7 @@ const LoginAction = (Login, url) => {
       localStorage.setItem('authToken', data.accessToken);
       localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
       console.log(data);
+      document.location.href = "/";
       return data;
     });
 };
