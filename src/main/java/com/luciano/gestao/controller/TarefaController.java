@@ -32,6 +32,8 @@ public class TarefaController {
     @Autowired
     private ITarefaService tarefaService;
 
+  
+
     @GetMapping
     @LogExecution(includeParameters = false, includeResult = true) // Log específico para este método
     public CompletableFuture<ResponseEntity<Iterable<TarefaDTO>>> getAllTarefasAsync() {
@@ -146,11 +148,16 @@ public class TarefaController {
                 .collect(Collectors.toList())).thenApply(ResponseEntity::ok);
     }
 
-    @GetMapping("/tarefas-atrasadas")
+    @GetMapping("/atrasadas")
     public CompletableFuture<ResponseEntity<Iterable<Tarefa>>> getTarefasAtrasadas() {
-        tarefaService = new TarefaService();
+       
         return tarefaService.tarefasAtrasadas();
 
+    }
+
+    @GetMapping("/concluidas")
+    public CompletableFuture<ResponseEntity<Iterable<Tarefa>>> getTarefasConcluidas() {      
+        return tarefaService.tarefasConcluidas();
     }
 
 }
